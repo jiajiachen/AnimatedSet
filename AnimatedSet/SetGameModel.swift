@@ -31,7 +31,8 @@ struct SetGameModel {
                 }
             }
         }
-        shuffle()
+        // shuffle()
+        cards.shuffle()
         for index in 0..<12 {
             setCardDeal(cards[index])
           //  dealtCards.append(cards[index])
@@ -172,8 +173,17 @@ struct SetGameModel {
        
     }
     
+    
     mutating func shuffle() {
-        cards.shuffle()
+//          cards.filter { !$0.isInDeck && $0.show}.shuffle()
+        
+        let indices = cards.indices.filter { !cards[$0].isInDeck && cards[$0].show }
+           
+           // 对这些索引位置的卡片进行打乱
+           for i in indices.indices {
+               let randomIndex = Int.random(in: i..<indices.count)
+               cards.swapAt(indices[i], indices[randomIndex])
+           }
     }
     
     mutating func resumeScore() {

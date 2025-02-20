@@ -67,7 +67,6 @@ struct SetGameView: View {
                 size: geometry.size,
                 atAspectRatio: 2/3)
             
-            
             LazyVGrid(columns: [GridItem(.adaptive(minimum: gridItemSize), spacing: 0)], spacing: 0) {
                 ForEach(viewModel.cards) { card in
                         CardView(card, gridItemSize)
