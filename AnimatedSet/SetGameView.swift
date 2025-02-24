@@ -101,6 +101,7 @@ struct SetGameView: View {
                 CardView(card, deckWidth / aspectRatio)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
+                    //.padding(4)
             }
             .frame(width: deckWidth, height: deckWidth / aspectRatio)
             .onTapGesture {
@@ -178,10 +179,10 @@ struct CardView: View {
     func getCardBackgroundColor() -> Color {
        
         if card.isMatched {
-            return .red
+            return .red.opacity(0.7)
             
         } else if card.isThreeCardsUnMatched {
-            return .yellow
+            return .yellow.opacity(0.7)
         } else {
             return .white
         }
@@ -202,23 +203,14 @@ struct CardView: View {
              //  base.overlay {
 
                  VStack {
-//                     ForEach(0..<card.number.rawValue) { _ in
-//                         HStack {
-//                             applyShading(to:getShape(card, gridItemSize))
-//                         }
-//                     }
                      ForEach(Array(0..<card.number.rawValue), id: \.self) { _ in
-                         HStack {
-                             
-                              applyShading(to:getShape(card, gridItemSize))
-                           
-                          }
+                         applyShading(to:getShape(card, gridItemSize))
                      }
                   }.padding(6)
                   
              
                // }
-                base.fill(.orange).opacity(card.isInDeck ? 1 : 0)
+                base.fill(.orange).opacity(card.isInDeck ? 0.3 : 0)
              
                
             }
@@ -249,8 +241,9 @@ struct CardView: View {
     }
     
     func getShape(_ card: SetGameModel.Card, _ gridItemSize: CGFloat) -> some Shape {
-        let height = gridItemSize / 3
-        let width = gridItemSize / 3 * 2
+        let height = gridItemSize / 4
+        let width = gridItemSize / 4 * 2
+        let centerX = width / 2
         switch card.shape {
         case CardShape.diamond:
             return Diamond().path(in: CGRect(x: 0, y: 0, width: width, height: height))
