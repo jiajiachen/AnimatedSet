@@ -98,10 +98,11 @@ struct SetGameView: View {
         ZStack {
             ForEach(viewModel.undealtCards) { card in
                 
-                CardView(card, deckWidth / aspectRatio)
+                CardView(card, (deckWidth - 15) / aspectRatio)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
                     //.padding(4)
+                   // .aspectRatio(2/3, contentMode: .fit)
             }
             .frame(width: deckWidth, height: deckWidth / aspectRatio)
             .onTapGesture {
@@ -115,10 +116,10 @@ struct SetGameView: View {
     var matchedDeck: some View {
         ZStack {
             ForEach(viewModel.matchedCards) { card in
-                CardView(card,  deckWidth / aspectRatio)
+                CardView(card,  (deckWidth - 15) / aspectRatio)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
-            
+                    //.aspectRatio(2/3, contentMode: .fit)
             }
             .frame(width: deckWidth, height: deckWidth / aspectRatio)
            
@@ -179,10 +180,10 @@ struct CardView: View {
     func getCardBackgroundColor() -> Color {
        
         if card.isMatched {
-            return .red.opacity(0.7)
+            return .red.opacity(0.3)
             
         } else if card.isThreeCardsUnMatched {
-            return .yellow.opacity(0.7)
+            return .yellow.opacity(0.3)
         } else {
             return .white
         }
@@ -195,22 +196,24 @@ struct CardView: View {
     var body: some View {
         ZStack {
             let base = RoundedRectangle(cornerRadius: 8)
-                
             Group {
-                
                 base.foregroundStyle(card.isMatched && !card.show ? .white : getCardBackgroundColor())
                base.strokeBorder(lineWidth: 2)
-             //  base.overlay {
-
-                 VStack {
-                     ForEach(Array(0..<card.number.rawValue), id: \.self) { _ in
-                         applyShading(to:getShape(card, gridItemSize))
-                     }
-                  }.padding(6)
+                
+                VStack(spacing: gridItemSize / 12) {
                   
-             
-               // }
-                base.fill(.orange).opacity(card.isInDeck ? 0.3 : 0)
+                     ForEach(Array(0..<card.number.rawValue), id: \.self) { _ in
+                       
+                             applyShading(to:getShape(card, gridItemSize))
+                                 .frame(width: gridItemSize / 3 * 2, height: gridItemSize / 3)
+                         
+                     }
+                   
+                 }
+              
+              
+                base.fill(.orange)
+                    .opacity(card.isInDeck ? 1 : 0)
              
                
             }
@@ -241,9 +244,9 @@ struct CardView: View {
     }
     
     func getShape(_ card: SetGameModel.Card, _ gridItemSize: CGFloat) -> some Shape {
-        let height = gridItemSize / 4
-        let width = gridItemSize / 4 * 2
-        let centerX = width / 2
+        let height = gridItemSize / 3
+        let width = gridItemSize / 3 * 2
+       
         switch card.shape {
         case CardShape.diamond:
             return Diamond().path(in: CGRect(x: 0, y: 0, width: width, height: height))
